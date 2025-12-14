@@ -971,16 +971,28 @@
             return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         }
 
-        // Map sessionIds to generic names for privacy
+        // Map sessionIds to generic names for privacy (using initials)
         const projectNameMap = new Map();
-        let projectCounter = 0;
+        const initialsCount = {};
 
         function getProjectName(sessionId) {
             if (!projectNameMap.has(sessionId)) {
-                const letter = String.fromCharCode(65 + (projectCounter % 26));
-                const prefix = projectCounter >= 26 ? String.fromCharCode(65 + Math.floor(projectCounter / 26) - 1) : '';
-                projectNameMap.set(sessionId, `Project ${prefix}${letter}`);
-                projectCounter++;
+                // Extract project name from sessionId path
+                const parts = sessionId.split('-').filter(p => p && p !== 'root' && p !== 'projects' && p !== 'Projects');
+                const projectName = parts.length > 0 ? parts.join('-') : 'root';
+
+                // Generate initials from words (split by hyphen, underscore, or camelCase)
+                const words = projectName.split(/[-_]/).filter(w => w.length > 0);
+                const initials = words.map(w => w.charAt(0).toUpperCase()).join('');
+
+                // Track duplicates and add #n if needed
+                if (!initialsCount[initials]) {
+                    initialsCount[initials] = 0;
+                }
+                initialsCount[initials]++;
+
+                const suffix = initialsCount[initials] > 1 ? ` #${initialsCount[initials] - 1}` : '';
+                projectNameMap.set(sessionId, `Project ${initials}${suffix}`);
             }
             return projectNameMap.get(sessionId);
         }
