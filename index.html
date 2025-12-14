@@ -974,6 +974,9 @@
     </div>
 
     <script>
+        // Chart instances (declared early to avoid TDZ errors)
+        let mainChart, weeklyChart, modelChart;
+
         // Theme management
         const getTheme = () => localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         const setTheme = (theme) => {
@@ -1009,8 +1012,8 @@
             const colors = getChartColors();
             Chart.defaults.color = colors.text;
             Chart.defaults.borderColor = colors.grid;
-            if (typeof mainChart !== 'undefined' && mainChart) renderMainChart(window.dailyData || [], window.currentRange || 14);
-            if (typeof weeklyChart !== 'undefined' && weeklyChart) renderWeeklyChart(window.dailyData || []);
+            if (mainChart) renderMainChart(window.dailyData || [], window.currentRange || 14);
+            if (weeklyChart) renderWeeklyChart(window.dailyData || []);
         }
 
         Chart.defaults.font.family = "'Inter', sans-serif";
@@ -1086,8 +1089,6 @@
                 return date >= startOfWeek && date < endOfWeek;
             });
         }
-
-        let mainChart, weeklyChart, modelChart;
 
         async function loadDashboard() {
             try {
