@@ -101,12 +101,12 @@
     },
     {
       "sessionId": "-root-projects-aizu-cc-usage-dashboard",
-      "inputTokens": 4217,
-      "outputTokens": 41,
-      "cacheCreationTokens": 24026,
-      "cacheReadTokens": 326422,
-      "totalTokens": 354706,
-      "totalCost": 0.3275915,
+      "inputTokens": 5334,
+      "outputTokens": 569,
+      "cacheCreationTokens": 910314,
+      "cacheReadTokens": 10989589,
+      "totalTokens": 11905806,
+      "totalCost": 11.21726,
       "lastActivity": "2025-12-14",
       "modelsUsed": [
         "claude-haiku-4-5-20251001",
@@ -115,11 +115,11 @@
       "modelBreakdowns": [
         {
           "modelName": "claude-opus-4-5-20251101",
-          "inputTokens": 2284,
-          "outputTokens": 33,
-          "cacheCreationTokens": 24026,
-          "cacheReadTokens": 326422,
-          "cost": 0.3256185
+          "inputTokens": 3401,
+          "outputTokens": 561,
+          "cacheCreationTokens": 910314,
+          "cacheReadTokens": 10989589,
+          "cost": 11.215287
         },
         {
           "modelName": "claude-haiku-4-5-20251001",
@@ -209,11 +209,11 @@
     }
   ],
   "totals": {
-    "inputTokens": 299326,
-    "outputTokens": 90703,
-    "cacheCreationTokens": 8284099,
-    "cacheReadTokens": 144523825,
-    "totalCost": 117.67272625,
-    "totalTokens": 153197953
+    "inputTokens": 300443,
+    "outputTokens": 91231,
+    "cacheCreationTokens": 9170387,
+    "cacheReadTokens": 155186992,
+    "totalCost": 128.56239475,
+    "totalTokens": 164749053
   }
 }
