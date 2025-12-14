@@ -1009,8 +1009,8 @@
             const colors = getChartColors();
             Chart.defaults.color = colors.text;
             Chart.defaults.borderColor = colors.grid;
-            if (mainChart) renderMainChart(window.dailyData || [], window.currentRange || 14);
-            if (weeklyChart) renderWeeklyChart(window.dailyData || []);
+            if (typeof mainChart !== 'undefined' && mainChart) renderMainChart(window.dailyData || [], window.currentRange || 14);
+            if (typeof weeklyChart !== 'undefined' && weeklyChart) renderWeeklyChart(window.dailyData || []);
         }
 
         Chart.defaults.font.family = "'Inter', sans-serif";
