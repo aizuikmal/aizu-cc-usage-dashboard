@@ -971,10 +971,18 @@
             return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         }
 
-        function extractProjectName(sessionId) {
-            const parts = sessionId.split('-').filter(p => p && p !== 'root' && p !== 'projects' && p !== 'Projects');
-            if (parts.length === 0) return 'root';
-            return parts.join('-');
+        // Map sessionIds to generic names for privacy
+        const projectNameMap = new Map();
+        let projectCounter = 0;
+
+        function getProjectName(sessionId) {
+            if (!projectNameMap.has(sessionId)) {
+                const letter = String.fromCharCode(65 + (projectCounter % 26));
+                const prefix = projectCounter >= 26 ? String.fromCharCode(65 + Math.floor(projectCounter / 26) - 1) : '';
+                projectNameMap.set(sessionId, `Project ${prefix}${letter}`);
+                projectCounter++;
+            }
+            return projectNameMap.get(sessionId);
         }
 
         function updateClock() {
@@ -1060,7 +1068,7 @@
                 if (sessions.length > 0) {
                     const topSession = sessions.reduce((max, s) => s.totalCost > max.totalCost ? s : max, sessions[0]);
                     $('#recordSession').text(formatCost(topSession.totalCost));
-                    $('#recordSessionName').text(extractProjectName(topSession.sessionId));
+                    $('#recordSessionName').text(getProjectName(topSession.sessionId));
                 }
 
                 // Projects
@@ -1069,7 +1077,7 @@
                     <div class="project-item">
                         <div class="project-icon"><i data-feather="folder"></i></div>
                         <div class="project-info">
-                            <div class="project-name">${extractProjectName(s.sessionId)}</div>
+                            <div class="project-name">${getProjectName(s.sessionId)}</div>
                             <div class="project-tokens">${formatNumber(s.totalTokens)} tokens</div>
                         </div>
                         <div class="project-cost">${formatCost(s.totalCost)}</div>
