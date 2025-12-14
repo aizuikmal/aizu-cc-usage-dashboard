@@ -15,6 +15,7 @@
             --bg-card: #ffffff;
             --bg-hover: #f1f5f9;
             --border-color: #e2e8f0;
+            --grid-color: rgba(0, 0, 0, 0.03);
             --text-primary: #0f172a;
             --text-secondary: #475569;
             --text-muted: #94a3b8;
@@ -35,6 +36,7 @@
             --bg-card: #1e293b;
             --bg-hover: #334155;
             --border-color: #334155;
+            --grid-color: rgba(255, 255, 255, 0.03);
             --text-primary: #f1f5f9;
             --text-secondary: #cbd5e1;
             --text-muted: #64748b;
@@ -49,6 +51,10 @@
         body {
             font-family: 'Ubuntu', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-secondary);
+            background-image:
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 20px 20px;
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.6;
