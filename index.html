@@ -1263,17 +1263,34 @@
                 data: {
                     labels: data.map(d => formatDate(d.date)),
                     datasets: [{
-                        label: 'Tokens',
-                        data: data.map(d => d.totalTokens),
-                        borderColor: '#2563eb',
-                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        label: 'Output',
+                        data: data.map(d => d.outputTokens || 0),
+                        borderColor: '#7c3aed',
+                        backgroundColor: 'rgba(124, 58, 237, 0.3)',
                         fill: true,
                         tension: 0.4,
-                        pointRadius: 3,
-                        pointHoverRadius: 6,
+                        pointRadius: 0,
+                        order: 3
+                    }, {
+                        label: 'Cache',
+                        data: data.map(d => (d.outputTokens || 0) + (d.cacheReadTokens || 0)),
+                        borderColor: '#16a34a',
+                        backgroundColor: 'rgba(22, 163, 74, 0.3)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        order: 2
+                    }, {
+                        label: 'Input',
+                        data: data.map(d => (d.outputTokens || 0) + (d.cacheReadTokens || 0) + (d.inputTokens || 0)),
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.3)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 2,
+                        pointHoverRadius: 4,
                         pointBackgroundColor: '#2563eb',
-                        pointBorderColor: getTheme() === 'dark' ? '#1e293b' : '#fff',
-                        pointBorderWidth: 2
+                        order: 1
                     }, {
                         label: 'Cost',
                         data: data.map(d => d.totalCost * 1000000),
@@ -1282,7 +1299,10 @@
                         tension: 0.4,
                         pointRadius: 0,
                         borderDash: [4, 4],
-                        yAxisID: 'cost'
+                        borderWidth: 2,
+                        fill: false,
+                        yAxisID: 'cost',
+                        order: 0
                     }]
                 },
                 options: {
@@ -1290,22 +1310,29 @@
                     maintainAspectRatio: false,
                     interaction: { intersect: false, mode: 'index' },
                     plugins: {
-                        legend: { display: true, position: 'top', labels: { boxWidth: 12, padding: 20, font: { size: 11 } } },
+                        legend: { display: true, position: 'top', labels: { boxWidth: 8, padding: 12, font: { size: 9 } } },
                         tooltip: {
                             backgroundColor: colors.tooltip,
-                            padding: 12,
-                            cornerRadius: 8,
-                            titleFont: { size: 12 },
-                            bodyFont: { size: 11 },
+                            padding: 10,
+                            cornerRadius: 6,
+                            titleFont: { size: 10 },
+                            bodyFont: { size: 9 },
                             callbacks: {
-                                label: ctx => ctx.datasetIndex === 0 ? 'Tokens: ' + formatNumber(ctx.raw) : 'Cost: ' + formatCost(ctx.raw / 1000000)
+                                label: function(ctx) {
+                                    const d = data[ctx.dataIndex];
+                                    if (ctx.dataset.label === 'Cost') return 'Cost: ' + formatCost(ctx.raw / 1000000);
+                                    if (ctx.dataset.label === 'Input') return 'Input: ' + formatNumber(d.inputTokens || 0);
+                                    if (ctx.dataset.label === 'Cache') return 'Cache: ' + formatNumber(d.cacheReadTokens || 0);
+                                    if (ctx.dataset.label === 'Output') return 'Output: ' + formatNumber(d.outputTokens || 0);
+                                    return ctx.dataset.label + ': ' + formatNumber(ctx.raw);
+                                }
                             }
                         }
                     },
                     scales: {
-                        y: { beginAtZero: true, grid: { color: colors.grid }, ticks: { callback: v => formatNumber(v), font: { size: 10 } } },
-                        cost: { position: 'right', beginAtZero: true, grid: { display: false }, ticks: { callback: v => formatCost(v / 1000000), font: { size: 10 } } },
-                        x: { grid: { color: colors.grid }, ticks: { font: { size: 10 } } }
+                        y: { stacked: false, beginAtZero: true, grid: { color: colors.grid }, ticks: { callback: v => formatNumber(v), font: { size: 9 } } },
+                        cost: { position: 'right', beginAtZero: true, grid: { display: false }, ticks: { callback: v => formatCost(v / 1000000), font: { size: 9 } } },
+                        x: { grid: { color: colors.grid }, ticks: { font: { size: 9 } } }
                     }
                 }
             });
