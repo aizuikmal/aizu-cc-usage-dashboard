@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claude Code Usage Dashboard</title>
+    <title>Aizu's Code - Usage Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
@@ -13,15 +13,35 @@
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
             --bg-card: #ffffff;
+            --bg-hover: #f1f5f9;
             --border-color: #e2e8f0;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
             --text-muted: #94a3b8;
-            --accent-primary: #3b82f6;
-            --accent-success: #22c55e;
-            --accent-warning: #f59e0b;
-            --accent-danger: #ef4444;
-            --accent-purple: #8b5cf6;
+            --accent-primary: #2563eb;
+            --accent-success: #16a34a;
+            --accent-warning: #d97706;
+            --accent-danger: #dc2626;
+            --accent-purple: #7c3aed;
+            --chart-grid: #f1f5f9;
+            --chart-text: #64748b;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --bg-hover: #334155;
+            --border-color: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --chart-grid: #334155;
+            --chart-text: #94a3b8;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,75 +51,72 @@
             background: var(--bg-secondary);
             color: var(--text-primary);
             min-height: 100vh;
-            line-height: 1.5;
+            line-height: 1.6;
+            transition: background 0.2s, color 0.2s;
         }
 
         .header {
             background: var(--bg-card);
             border-bottom: 1px solid var(--border-color);
-            padding: 16px 24px;
+            padding: 16px 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: var(--shadow-sm);
         }
 
-        .header-left { display: flex; align-items: center; gap: 16px; }
+        .header-left { display: flex; align-items: center; gap: 24px; }
 
         .logo { display: flex; align-items: center; gap: 12px; }
 
         .logo-icon {
-            width: 36px; height: 36px;
+            width: 40px; height: 40px;
             background: var(--accent-primary);
-            border-radius: 8px;
+            border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
         }
 
-        .logo-icon svg { color: white; width: 20px; height: 20px; }
+        .logo-icon svg { color: white; width: 22px; height: 22px; }
 
         .logo-text { font-size: 1.125rem; font-weight: 600; color: var(--text-primary); }
-        .logo-sub { font-size: 0.75rem; color: var(--text-muted); }
+        .logo-sub { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
 
         .header-right { display: flex; align-items: center; gap: 16px; }
 
-        .status-badge {
-            display: flex; align-items: center; gap: 6px;
-            padding: 6px 12px;
-            background: #dcfce7;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: #166534;
-        }
-
-        .status-dot {
-            width: 6px; height: 6px;
-            background: #22c55e;
-            border-radius: 50%;
-        }
-
-        .datetime { text-align: right; }
-        .datetime-date { font-size: 0.75rem; color: var(--text-muted); }
-        .datetime-time { font-size: 0.875rem; font-weight: 500; color: var(--text-primary); }
-
-        .container { padding: 24px; max-width: 1600px; margin: 0 auto; }
-
-        .section-title {
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin: 24px 0 16px;
+        .theme-toggle {
+            width: 40px; height: 40px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover { background: var(--bg-hover); }
+        .theme-toggle svg { width: 18px; height: 18px; color: var(--text-secondary); }
+
+        .datetime { text-align: right; }
+        .datetime-date { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+        .datetime-time { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+
+        .container { padding: 32px; max-width: 1600px; margin: 0 auto; }
+
+        .section-title {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin: 32px 0 16px;
         }
 
         .section-title:first-child { margin-top: 0; }
-        .section-title svg { width: 14px; height: 14px; }
 
         /* Stats Grid */
         .stats-grid {
@@ -114,19 +131,16 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 20px;
+            transition: box-shadow 0.2s;
         }
 
-        .stat-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
+        .stat-card:hover { box-shadow: var(--shadow-md); }
 
         .stat-label {
             font-size: 0.75rem;
             font-weight: 500;
-            color: var(--text-secondary);
+            color: var(--text-muted);
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -139,6 +153,7 @@
             font-weight: 700;
             color: var(--text-primary);
             line-height: 1.2;
+            font-variant-numeric: tabular-nums;
         }
 
         .stat-value.primary { color: var(--accent-primary); }
@@ -154,7 +169,10 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             overflow: hidden;
+            transition: box-shadow 0.2s;
         }
+
+        .panel:hover { box-shadow: var(--shadow-md); }
 
         .panel-header {
             display: flex;
@@ -173,9 +191,9 @@
             gap: 8px;
         }
 
-        .panel-title svg { width: 16px; height: 16px; color: var(--text-secondary); }
+        .panel-title svg { width: 16px; height: 16px; color: var(--text-muted); }
 
-        .panel-actions { display: flex; gap: 8px; }
+        .panel-actions { display: flex; gap: 6px; }
 
         .panel-action {
             background: var(--bg-secondary);
@@ -190,7 +208,7 @@
             font-family: inherit;
         }
 
-        .panel-action:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
+        .panel-action:hover { background: var(--bg-hover); }
         .panel-action.active { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
 
         .panel-body { padding: 20px; }
@@ -250,11 +268,11 @@
             margin-bottom: 12px;
         }
 
-        .record-icon svg { width: 16px; height: 16px; color: var(--text-secondary); }
+        .record-icon svg { width: 14px; height: 14px; color: var(--text-muted); }
 
-        .record-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; font-weight: 500; }
-        .record-value { font-size: 1.125rem; font-weight: 700; color: var(--text-primary); margin-top: 4px; }
-        .record-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+        .record-label { font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+        .record-value { font-size: 1.125rem; font-weight: 700; color: var(--text-primary); margin-top: 4px; font-variant-numeric: tabular-nums; }
+        .record-sub { font-size: 0.6875rem; color: var(--text-muted); margin-top: 2px; }
 
         /* Projects */
         .project-list { display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto; }
@@ -266,7 +284,10 @@
             padding: 12px;
             background: var(--bg-secondary);
             border-radius: 8px;
+            transition: background 0.15s;
         }
+
+        .project-item:hover { background: var(--bg-hover); }
 
         .project-icon {
             width: 32px; height: 32px;
@@ -278,12 +299,12 @@
             justify-content: center;
         }
 
-        .project-icon svg { width: 16px; height: 16px; color: var(--text-secondary); }
+        .project-icon svg { width: 14px; height: 14px; color: var(--text-muted); }
 
         .project-info { flex: 1; min-width: 0; }
-        .project-name { font-size: 0.8rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .project-tokens { font-size: 0.7rem; color: var(--text-muted); }
-        .project-cost { font-size: 0.875rem; font-weight: 600; color: var(--accent-warning); }
+        .project-name { font-size: 0.8125rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .project-tokens { font-size: 0.6875rem; color: var(--text-muted); }
+        .project-cost { font-size: 0.875rem; font-weight: 600; color: var(--accent-warning); font-variant-numeric: tabular-nums; }
 
         /* Heatmap */
         .heatmap-grid {
@@ -296,21 +317,24 @@
             aspect-ratio: 1;
             border-radius: 3px;
             background: var(--bg-secondary);
+            transition: transform 0.1s;
         }
 
-        .heatmap-cell.level-1 { background: #dbeafe; }
-        .heatmap-cell.level-2 { background: #93c5fd; }
-        .heatmap-cell.level-3 { background: #60a5fa; }
-        .heatmap-cell.level-4 { background: #3b82f6; }
-        .heatmap-cell.level-5 { background: #2563eb; }
+        .heatmap-cell:hover { transform: scale(1.2); }
 
-        .heatmap-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.7rem; color: var(--text-muted); }
+        .heatmap-cell.level-1 { background: rgba(37, 99, 235, 0.2); }
+        .heatmap-cell.level-2 { background: rgba(37, 99, 235, 0.4); }
+        .heatmap-cell.level-3 { background: rgba(37, 99, 235, 0.6); }
+        .heatmap-cell.level-4 { background: rgba(37, 99, 235, 0.8); }
+        .heatmap-cell.level-5 { background: var(--accent-primary); }
+
+        .heatmap-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.6875rem; color: var(--text-muted); }
 
         /* Efficiency Cards */
         .efficiency-card {
             background: var(--bg-secondary);
             border-radius: 8px;
-            padding: 20px;
+            padding: 24px;
             text-align: center;
         }
 
@@ -325,12 +349,12 @@
             justify-content: center;
         }
 
-        .efficiency-icon svg { width: 24px; height: 24px; color: var(--accent-success); }
-        .efficiency-value { font-size: 1.5rem; font-weight: 700; color: var(--accent-success); margin-bottom: 4px; }
+        .efficiency-icon svg { width: 22px; height: 22px; color: var(--accent-success); }
+        .efficiency-value { font-size: 1.5rem; font-weight: 700; color: var(--accent-success); margin-bottom: 4px; font-variant-numeric: tabular-nums; }
         .efficiency-label { font-size: 0.75rem; color: var(--text-muted); }
 
         /* Gauge */
-        .gauge-container { display: flex; flex-direction: column; align-items: center; padding: 20px 0; }
+        .gauge-container { display: flex; flex-direction: column; align-items: center; padding: 24px 0; }
 
         .gauge {
             position: relative;
@@ -370,8 +394,8 @@
             text-align: center;
         }
 
-        .gauge-value { font-size: 1.5rem; font-weight: 700; color: var(--accent-success); }
-        .gauge-label { font-size: 0.7rem; color: var(--text-muted); }
+        .gauge-value { font-size: 1.5rem; font-weight: 700; color: var(--accent-success); font-variant-numeric: tabular-nums; }
+        .gauge-label { font-size: 0.6875rem; color: var(--text-muted); }
 
         /* Models */
         .model-list { display: flex; flex-direction: column; gap: 12px; }
@@ -387,37 +411,38 @@
 
         .model-icon {
             width: 40px; height: 40px;
-            border-radius: 8px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .model-icon.opus { background: #ede9fe; }
-        .model-icon.sonnet { background: #dbeafe; }
-        .model-icon.haiku { background: #dcfce7; }
-        .model-icon.opus svg { color: #7c3aed; }
-        .model-icon.sonnet svg { color: #3b82f6; }
-        .model-icon.haiku svg { color: #22c55e; }
-        .model-icon svg { width: 20px; height: 20px; }
+        .model-icon.opus { background: rgba(124, 58, 237, 0.15); }
+        .model-icon.sonnet { background: rgba(37, 99, 235, 0.15); }
+        .model-icon.haiku { background: rgba(22, 163, 74, 0.15); }
+        .model-icon.opus svg { color: var(--accent-purple); }
+        .model-icon.sonnet svg { color: var(--accent-primary); }
+        .model-icon.haiku svg { color: var(--accent-success); }
+        .model-icon svg { width: 18px; height: 18px; }
 
         .model-info { flex: 1; }
         .model-name { font-size: 0.875rem; font-weight: 500; }
         .model-tokens { font-size: 0.75rem; color: var(--text-muted); }
         .model-cost { text-align: right; }
-        .model-cost-value { font-size: 0.875rem; font-weight: 600; color: var(--accent-warning); }
-        .model-cost-percent { font-size: 0.7rem; color: var(--text-muted); }
+        .model-cost-value { font-size: 0.875rem; font-weight: 600; color: var(--accent-warning); font-variant-numeric: tabular-nums; }
+        .model-cost-percent { font-size: 0.6875rem; color: var(--text-muted); }
 
         .model-badge {
             display: inline-block;
             padding: 2px 6px;
             border-radius: 4px;
-            font-size: 0.6rem;
+            font-size: 0.5625rem;
             font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.05em;
             background: var(--accent-primary);
             color: white;
-            margin-left: 6px;
+            margin-left: 8px;
         }
 
         /* Token Flow */
@@ -425,7 +450,7 @@
             display: flex;
             align-items: center;
             justify-content: space-around;
-            padding: 20px 0;
+            padding: 24px 0;
         }
 
         .flow-node { text-align: center; }
@@ -439,19 +464,22 @@
             justify-content: center;
             margin-bottom: 8px;
             border: 2px solid;
+            transition: transform 0.2s;
         }
 
-        .flow-circle.input { border-color: var(--accent-primary); background: #eff6ff; }
-        .flow-circle.cache { border-color: var(--accent-success); background: #f0fdf4; }
-        .flow-circle.output { border-color: var(--accent-warning); background: #fffbeb; }
+        .flow-circle:hover { transform: scale(1.05); }
 
-        .flow-circle svg { width: 20px; height: 20px; margin-bottom: 2px; }
+        .flow-circle.input { border-color: var(--accent-primary); background: rgba(37, 99, 235, 0.1); }
+        .flow-circle.cache { border-color: var(--accent-success); background: rgba(22, 163, 74, 0.1); }
+        .flow-circle.output { border-color: var(--accent-warning); background: rgba(217, 119, 6, 0.1); }
+
+        .flow-circle svg { width: 18px; height: 18px; margin-bottom: 2px; }
         .flow-circle.input svg { color: var(--accent-primary); }
         .flow-circle.cache svg { color: var(--accent-success); }
         .flow-circle.output svg { color: var(--accent-warning); }
 
-        .flow-value { font-size: 0.65rem; font-weight: 600; }
-        .flow-label { font-size: 0.7rem; color: var(--text-muted); }
+        .flow-value { font-size: 0.625rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+        .flow-label { font-size: 0.6875rem; color: var(--text-muted); font-weight: 500; }
         .flow-arrow { color: var(--text-muted); }
         .flow-arrow svg { width: 20px; height: 20px; }
 
@@ -478,10 +506,10 @@
             justify-content: center;
         }
 
-        .metric-icon.blue { background: #dbeafe; }
-        .metric-icon.green { background: #dcfce7; }
-        .metric-icon.orange { background: #ffedd5; }
-        .metric-icon.purple { background: #ede9fe; }
+        .metric-icon.blue { background: rgba(37, 99, 235, 0.15); }
+        .metric-icon.green { background: rgba(22, 163, 74, 0.15); }
+        .metric-icon.orange { background: rgba(217, 119, 6, 0.15); }
+        .metric-icon.purple { background: rgba(124, 58, 237, 0.15); }
 
         .metric-icon svg { width: 14px; height: 14px; }
         .metric-icon.blue svg { color: var(--accent-primary); }
@@ -489,15 +517,15 @@
         .metric-icon.orange svg { color: var(--accent-warning); }
         .metric-icon.purple svg { color: var(--accent-purple); }
 
-        .metric-label { font-size: 0.7rem; color: var(--text-muted); }
+        .metric-label { font-size: 0.6875rem; color: var(--text-muted); font-weight: 500; }
 
-        .metric-value { font-size: 1.125rem; font-weight: 700; }
+        .metric-value { font-size: 1.125rem; font-weight: 700; font-variant-numeric: tabular-nums; }
         .metric-value.blue { color: var(--accent-primary); }
         .metric-value.green { color: var(--accent-success); }
         .metric-value.orange { color: var(--accent-warning); }
         .metric-value.purple { color: var(--accent-purple); }
 
-        .metric-bar { height: 4px; background: var(--border-color); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+        .metric-bar { height: 4px; background: var(--border-color); border-radius: 2px; margin-top: 10px; overflow: hidden; }
         .metric-bar-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
         .metric-bar-fill.blue { background: var(--accent-primary); }
         .metric-bar-fill.green { background: var(--accent-success); }
@@ -515,23 +543,23 @@
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 20px;
+            padding: 24px;
             text-align: center;
         }
 
         .summary-icon {
-            width: 40px; height: 40px;
+            width: 44px; height: 44px;
             margin: 0 auto 12px;
             background: var(--bg-secondary);
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .summary-icon svg { width: 20px; height: 20px; color: var(--text-secondary); }
+        .summary-icon svg { width: 20px; height: 20px; color: var(--text-muted); }
 
-        .summary-value { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+        .summary-value { font-size: 1.375rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; font-variant-numeric: tabular-nums; }
         .summary-label { font-size: 0.75rem; color: var(--text-muted); }
 
         /* Footer */
@@ -539,7 +567,7 @@
             text-align: center;
             padding: 24px;
             border-top: 1px solid var(--border-color);
-            margin-top: 24px;
+            margin-top: 32px;
             background: var(--bg-card);
         }
 
@@ -547,7 +575,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 24px;
+            gap: 32px;
             flex-wrap: wrap;
         }
 
@@ -560,7 +588,7 @@
         }
 
         .footer-item svg { width: 14px; height: 14px; }
-        .footer-item a { color: var(--accent-primary); text-decoration: none; }
+        .footer-item a { color: var(--accent-primary); text-decoration: none; font-weight: 500; }
         .footer-item a:hover { text-decoration: underline; }
 
         /* Loading */
@@ -590,7 +618,13 @@
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .loading-text { font-size: 0.875rem; color: var(--text-secondary); }
+        .loading-text { font-size: 0.875rem; color: var(--text-secondary); font-weight: 500; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
         /* Responsive */
         @media (max-width: 1400px) {
@@ -604,6 +638,7 @@
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .two-col-grid { grid-template-columns: 1fr; }
             .summary-stats { grid-template-columns: repeat(2, 1fr); }
+            .container { padding: 20px; }
         }
 
         @media (max-width: 600px) {
@@ -611,7 +646,7 @@
             .four-col-grid { grid-template-columns: 1fr; }
             .summary-stats { grid-template-columns: 1fr; }
             .records-grid { grid-template-columns: 1fr; }
-            .header { flex-direction: column; gap: 12px; }
+            .header { flex-direction: column; gap: 16px; padding: 16px; }
         }
     </style>
 </head>
@@ -626,66 +661,53 @@
             <div class="logo">
                 <div class="logo-icon"><i data-feather="terminal"></i></div>
                 <div>
-                    <div class="logo-text">Claude Code Usage</div>
+                    <div class="logo-text">Aizu's Code</div>
                     <div class="logo-sub">Analytics Dashboard</div>
                 </div>
             </div>
         </div>
         <div class="header-right">
-            <div class="status-badge">
-                <span class="status-dot"></span>
-                <span>Connected</span>
-            </div>
+            <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+                <i data-feather="moon" id="themeIcon"></i>
+            </button>
             <div class="datetime">
                 <div class="datetime-date" id="currentDate">-</div>
-                <div class="datetime-time" id="currentTime">--:--:--</div>
+                <div class="datetime-time" id="currentTime">--:--</div>
             </div>
         </div>
     </header>
 
     <div class="container">
-        <div class="section-title"><i data-feather="bar-chart-2"></i> Overview</div>
+        <div class="section-title">Overview</div>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-label"><i data-feather="hash"></i> Total Tokens</span>
-                </div>
+                <div class="stat-label"><i data-feather="hash"></i> Total Tokens</div>
                 <div class="stat-value primary" id="totalTokens">-</div>
                 <div class="stat-sub">This month</div>
             </div>
             <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-label"><i data-feather="dollar-sign"></i> Total Cost</span>
-                </div>
+                <div class="stat-label"><i data-feather="dollar-sign"></i> Total Cost</div>
                 <div class="stat-value warning" id="totalCost">-</div>
                 <div class="stat-sub">This month</div>
             </div>
             <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-label"><i data-feather="zap"></i> Current Streak</span>
-                </div>
+                <div class="stat-label"><i data-feather="zap"></i> Current Streak</div>
                 <div class="stat-value success" id="streak">-</div>
                 <div class="stat-sub">Consecutive days</div>
             </div>
             <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-label"><i data-feather="activity"></i> Avg Daily</span>
-                </div>
+                <div class="stat-label"><i data-feather="activity"></i> Avg Daily</div>
                 <div class="stat-value" id="avgDaily">-</div>
                 <div class="stat-sub">Tokens per day</div>
             </div>
             <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-label"><i data-feather="folder"></i> Projects</span>
-                </div>
+                <div class="stat-label"><i data-feather="folder"></i> Projects</div>
                 <div class="stat-value purple" id="totalSessions">-</div>
                 <div class="stat-sub">Active this month</div>
             </div>
             <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-label"><i data-feather="calendar"></i> Days Active</span>
-                </div>
+                <div class="stat-label"><i data-feather="calendar"></i> Days Active</div>
                 <div class="stat-value" id="daysActive">-</div>
                 <div class="stat-sub">This month</div>
             </div>
@@ -696,9 +718,9 @@
                 <div class="panel-header">
                     <span class="panel-title"><i data-feather="trending-up"></i> Usage Over Time</span>
                     <div class="panel-actions">
-                        <button class="panel-action active" data-range="14">14 Days</button>
-                        <button class="panel-action" data-range="30">30 Days</button>
-                        <button class="panel-action" data-range="all">All Time</button>
+                        <button class="panel-action active" data-range="14">14D</button>
+                        <button class="panel-action" data-range="30">30D</button>
+                        <button class="panel-action" data-range="all">All</button>
                     </div>
                 </div>
                 <div class="panel-body">
@@ -753,7 +775,7 @@
         <div class="two-col-grid">
             <div class="panel">
                 <div class="panel-header">
-                    <span class="panel-title"><i data-feather="git-branch"></i> Weekly Comparison</span>
+                    <span class="panel-title"><i data-feather="bar-chart-2"></i> Weekly Comparison</span>
                 </div>
                 <div class="panel-body">
                     <div class="chart-container"><canvas id="weeklyChart"></canvas></div>
@@ -773,7 +795,7 @@
             </div>
         </div>
 
-        <div class="section-title"><i data-feather="cpu"></i> Efficiency & Analytics</div>
+        <div class="section-title">Efficiency & Analytics</div>
 
         <div class="four-col-grid">
             <div class="panel">
@@ -787,7 +809,7 @@
                             <div class="gauge-fill" id="cacheGauge"></div>
                             <div class="gauge-center">
                                 <div class="gauge-value" id="cacheRate">-</div>
-                                <div class="gauge-label">Cache Efficiency</div>
+                                <div class="gauge-label">Efficiency</div>
                             </div>
                         </div>
                     </div>
@@ -798,7 +820,7 @@
                     <div class="efficiency-card">
                         <div class="efficiency-icon"><i data-feather="dollar-sign"></i></div>
                         <div class="efficiency-value" id="cacheSavings">-</div>
-                        <div class="efficiency-label">Estimated Cache Savings</div>
+                        <div class="efficiency-label">Cache Savings</div>
                     </div>
                 </div>
             </div>
@@ -807,7 +829,7 @@
                     <div class="efficiency-card">
                         <div class="efficiency-icon"><i data-feather="zap"></i></div>
                         <div class="efficiency-value" id="costPer1k">-</div>
-                        <div class="efficiency-label">Cost per 1K Tokens</div>
+                        <div class="efficiency-label">Cost / 1K Tokens</div>
                     </div>
                 </div>
             </div>
@@ -816,7 +838,7 @@
                     <div class="efficiency-card">
                         <div class="efficiency-icon"><i data-feather="bar-chart"></i></div>
                         <div class="efficiency-value" id="tokensPerDollar">-</div>
-                        <div class="efficiency-label">Tokens per Dollar</div>
+                        <div class="efficiency-label">Tokens / Dollar</div>
                     </div>
                 </div>
             </div>
@@ -861,7 +883,7 @@
                                 <i data-feather="database"></i>
                                 <span class="flow-value" id="flowCache">-</span>
                             </div>
-                            <div class="flow-label">Cache Hit</div>
+                            <div class="flow-label">Cache</div>
                         </div>
                         <div class="flow-arrow"><i data-feather="chevron-right"></i></div>
                         <div class="flow-node">
@@ -917,23 +939,23 @@
             </div>
         </div>
 
-        <div class="section-title"><i data-feather="info"></i> Summary</div>
+        <div class="section-title">Summary</div>
 
         <div class="summary-stats">
             <div class="summary-stat">
                 <div class="summary-icon"><i data-feather="file-text"></i></div>
                 <div class="summary-value" id="funPages">-</div>
-                <div class="summary-label">Pages of text equivalent</div>
+                <div class="summary-label">Pages of text</div>
             </div>
             <div class="summary-stat">
                 <div class="summary-icon"><i data-feather="coffee"></i></div>
                 <div class="summary-value" id="funCoffee">-</div>
-                <div class="summary-label">Cups of coffee worth</div>
+                <div class="summary-label">Coffees worth</div>
             </div>
             <div class="summary-stat">
                 <div class="summary-icon"><i data-feather="code"></i></div>
                 <div class="summary-value" id="funCode">-</div>
-                <div class="summary-label">Est. lines of code</div>
+                <div class="summary-label">Lines of code</div>
             </div>
             <div class="summary-stat">
                 <div class="summary-icon"><i data-feather="edit-3"></i></div>
@@ -952,10 +974,45 @@
     </div>
 
     <script>
+        // Theme management
+        const getTheme = () => localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const setTheme = (theme) => {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            updateThemeIcon(theme);
+            updateChartColors();
+        };
+        const updateThemeIcon = (theme) => {
+            const icon = document.getElementById('themeIcon');
+            icon.setAttribute('data-feather', theme === 'dark' ? 'sun' : 'moon');
+            feather.replace();
+        };
+
+        setTheme(getTheme());
+
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            setTheme(getTheme() === 'dark' ? 'light' : 'dark');
+        });
+
         feather.replace();
 
-        Chart.defaults.color = '#64748b';
-        Chart.defaults.borderColor = '#e2e8f0';
+        function getChartColors() {
+            const isDark = getTheme() === 'dark';
+            return {
+                text: isDark ? '#94a3b8' : '#64748b',
+                grid: isDark ? '#334155' : '#f1f5f9',
+                tooltip: isDark ? '#1e293b' : '#0f172a'
+            };
+        }
+
+        function updateChartColors() {
+            const colors = getChartColors();
+            Chart.defaults.color = colors.text;
+            Chart.defaults.borderColor = colors.grid;
+            if (mainChart) renderMainChart(window.dailyData || [], window.currentRange || 14);
+            if (weeklyChart) renderWeeklyChart(window.dailyData || []);
+        }
+
         Chart.defaults.font.family = "'Inter', sans-serif";
 
         function formatNumber(num) {
@@ -977,18 +1034,12 @@
 
         function getProjectName(sessionId) {
             if (!projectNameMap.has(sessionId)) {
-                // Extract project name from sessionId path
                 const parts = sessionId.split('-').filter(p => p && p !== 'root' && p !== 'projects' && p !== 'Projects');
                 const projectName = parts.length > 0 ? parts.join('-') : 'root';
-
-                // Generate initials from words (split by hyphen, underscore, or camelCase)
                 const words = projectName.split(/[-_]/).filter(w => w.length > 0);
                 const initials = words.map(w => w.charAt(0).toUpperCase()).join('');
 
-                // Track duplicates and add #n if needed
-                if (!initialsCount[initials]) {
-                    initialsCount[initials] = 0;
-                }
+                if (!initialsCount[initials]) initialsCount[initials] = 0;
                 initialsCount[initials]++;
 
                 const suffix = initialsCount[initials] > 1 ? ` #${initialsCount[initials] - 1}` : '';
@@ -1051,11 +1102,11 @@
                 const sessionsData = await sessionsRes.json();
 
                 const daily = dailyData.daily || [];
+                window.dailyData = daily;
                 const monthly = monthlyData.monthly || [];
                 const totals = monthlyData.totals || {};
                 const sessions = sessionsData.sessions || [];
 
-                // Primary stats
                 $('#totalTokens').text(formatNumber(totals.totalTokens || 0));
                 $('#totalCost').text(formatCost(totals.totalCost || 0));
                 $('#streak').text(calculateStreak(daily));
@@ -1065,7 +1116,6 @@
                 $('#avgDaily').text(formatNumber(avgDaily));
                 $('#totalSessions').text(sessions.length);
 
-                // Records
                 if (daily.length > 0) {
                     const peakTokenDay = daily.reduce((max, d) => d.totalTokens > max.totalTokens ? d : max, daily[0]);
                     const peakCostDay = daily.reduce((max, d) => d.totalCost > max.totalCost ? d : max, daily[0]);
@@ -1083,7 +1133,6 @@
                     $('#recordSessionName').text(getProjectName(topSession.sessionId));
                 }
 
-                // Projects
                 const topSessions = sessions.sort((a, b) => b.totalCost - a.totalCost).slice(0, 5);
                 const projectHtml = topSessions.map(s => `
                     <div class="project-item">
@@ -1097,7 +1146,6 @@
                 `).join('');
                 $('#projectList').html(projectHtml);
 
-                // Efficiency metrics
                 const cacheHitRate = totals.cacheReadTokens / (totals.cacheReadTokens + totals.inputTokens) * 100;
                 const cacheSavings = (totals.cacheReadTokens * 0.0135) / 1000000;
                 const costPer1k = (totals.totalCost / totals.totalTokens) * 1000;
@@ -1111,7 +1159,6 @@
                 $('#costPer1k').text('$' + costPer1k.toFixed(4));
                 $('#tokensPerDollar').text(formatNumber(tokensPerDollar));
 
-                // Token metrics
                 $('#inputTokens').text(formatNumber(totals.inputTokens || 0));
                 $('#outputTokens').text(formatNumber(totals.outputTokens || 0));
                 $('#cacheCreated').text(formatNumber(totals.cacheCreationTokens || 0));
@@ -1123,12 +1170,10 @@
                 $('#cacheCreatedBar').css('width', ((totals.cacheCreationTokens || 0) / maxMetric * 100) + '%');
                 $('#cacheReadBar').css('width', ((totals.cacheReadTokens || 0) / maxMetric * 100) + '%');
 
-                // Flow chart
                 $('#flowInput').text(formatNumber(totals.inputTokens || 0));
                 $('#flowCache').text(formatNumber(totals.cacheReadTokens || 0));
                 $('#flowOutput').text(formatNumber(totals.outputTokens || 0));
 
-                // Summary stats
                 const totalTokens = totals.totalTokens || 0;
                 const outputTokens = totals.outputTokens || 0;
                 $('#funPages').text(formatNumber(Math.round(totalTokens / 250)));
@@ -1136,7 +1181,6 @@
                 $('#funCode').text(formatNumber(Math.round(outputTokens / 10)));
                 $('#funWords').text(formatNumber(Math.round(outputTokens * 0.75)));
 
-                // Model distribution
                 const currentMonth = monthly[monthly.length - 1];
                 if (currentMonth && currentMonth.modelBreakdowns) {
                     const primaryModel = currentMonth.modelBreakdowns.reduce((max, m) => m.cost > max.cost ? m : max, currentMonth.modelBreakdowns[0]);
@@ -1162,8 +1206,7 @@
                     }).join('');
                     $('#modelList').html(modelHtml);
 
-                    // Model chart
-                    const modelColors = { opus: '#8b5cf6', sonnet: '#3b82f6', haiku: '#22c55e' };
+                    const modelColors = { opus: '#7c3aed', sonnet: '#2563eb', haiku: '#16a34a' };
                     const ctx = document.getElementById('modelChart').getContext('2d');
                     if (modelChart) modelChart.destroy();
                     modelChart = new Chart(ctx, {
@@ -1179,7 +1222,7 @@
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
-                            cutout: '65%',
+                            cutout: '70%',
                             plugins: {
                                 legend: { position: 'bottom', labels: { padding: 20, boxWidth: 12, font: { size: 12 } } },
                                 tooltip: { callbacks: { label: ctx => ctx.label + ': ' + formatCost(ctx.raw) } }
@@ -1197,13 +1240,15 @@
 
             } catch (error) {
                 console.error('Failed to load dashboard:', error);
-                $('#loadingOverlay').html('<div class="loading-text" style="color: #ef4444;">Error loading data</div>');
+                $('#loadingOverlay').html('<div class="loading-text" style="color: #dc2626;">Error loading data</div>');
             }
         }
 
         function renderMainChart(daily, days) {
+            window.currentRange = days;
             const data = days === 'all' ? daily : daily.slice(-days);
             const ctx = document.getElementById('mainChart').getContext('2d');
+            const colors = getChartColors();
             if (mainChart) mainChart.destroy();
 
             mainChart = new Chart(ctx, {
@@ -1213,21 +1258,21 @@
                     datasets: [{
                         label: 'Tokens',
                         data: data.map(d => d.totalTokens),
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
                         fill: true,
-                        tension: 0.3,
+                        tension: 0.4,
                         pointRadius: 3,
-                        pointHoverRadius: 5,
-                        pointBackgroundColor: '#3b82f6',
-                        pointBorderColor: '#fff',
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: '#2563eb',
+                        pointBorderColor: getTheme() === 'dark' ? '#1e293b' : '#fff',
                         pointBorderWidth: 2
                     }, {
                         label: 'Cost',
                         data: data.map(d => d.totalCost * 1000000),
-                        borderColor: '#f59e0b',
+                        borderColor: '#d97706',
                         backgroundColor: 'transparent',
-                        tension: 0.3,
+                        tension: 0.4,
                         pointRadius: 0,
                         borderDash: [4, 4],
                         yAxisID: 'cost'
@@ -1238,20 +1283,22 @@
                     maintainAspectRatio: false,
                     interaction: { intersect: false, mode: 'index' },
                     plugins: {
-                        legend: { display: true, position: 'top', labels: { boxWidth: 12, padding: 20, font: { size: 12 } } },
+                        legend: { display: true, position: 'top', labels: { boxWidth: 12, padding: 20, font: { size: 11 } } },
                         tooltip: {
-                            backgroundColor: '#1e293b',
+                            backgroundColor: colors.tooltip,
                             padding: 12,
                             cornerRadius: 8,
+                            titleFont: { size: 12 },
+                            bodyFont: { size: 11 },
                             callbacks: {
                                 label: ctx => ctx.datasetIndex === 0 ? 'Tokens: ' + formatNumber(ctx.raw) : 'Cost: ' + formatCost(ctx.raw / 1000000)
                             }
                         }
                     },
                     scales: {
-                        y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { callback: v => formatNumber(v), font: { size: 11 } } },
-                        cost: { position: 'right', beginAtZero: true, grid: { display: false }, ticks: { callback: v => formatCost(v / 1000000), font: { size: 11 } } },
-                        x: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 } } }
+                        y: { beginAtZero: true, grid: { color: colors.grid }, ticks: { callback: v => formatNumber(v), font: { size: 10 } } },
+                        cost: { position: 'right', beginAtZero: true, grid: { display: false }, ticks: { callback: v => formatCost(v / 1000000), font: { size: 10 } } },
+                        x: { grid: { color: colors.grid }, ticks: { font: { size: 10 } } }
                     }
                 }
             });
@@ -1261,6 +1308,7 @@
             const thisWeek = getWeekData(daily, 0);
             const lastWeek = getWeekData(daily, 1);
             const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const colors = getChartColors();
 
             const thisWeekByDay = new Array(7).fill(0);
             const lastWeekByDay = new Array(7).fill(0);
@@ -1278,22 +1326,22 @@
                     datasets: [{
                         label: 'This Week',
                         data: thisWeekByDay,
-                        backgroundColor: '#3b82f6',
+                        backgroundColor: '#2563eb',
                         borderRadius: 4
                     }, {
                         label: 'Last Week',
                         data: lastWeekByDay,
-                        backgroundColor: '#e2e8f0',
+                        backgroundColor: getTheme() === 'dark' ? '#334155' : '#e2e8f0',
                         borderRadius: 4
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: true, position: 'top', labels: { boxWidth: 12, padding: 20, font: { size: 12 } } } },
+                    plugins: { legend: { display: true, position: 'top', labels: { boxWidth: 12, padding: 20, font: { size: 11 } } } },
                     scales: {
-                        y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { callback: v => formatNumber(v), font: { size: 11 } } },
-                        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+                        y: { beginAtZero: true, grid: { color: colors.grid }, ticks: { callback: v => formatNumber(v), font: { size: 10 } } },
+                        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
                     }
                 }
             });
