@@ -1,0 +1,219 @@
+{
+  "sessions": [
+    {
+      "sessionId": "-root",
+      "inputTokens": 26972,
+      "outputTokens": 193,
+      "cacheCreationTokens": 157759,
+      "cacheReadTokens": 1321768,
+      "totalTokens": 1506692,
+      "totalCost": 1.7220707499999999,
+      "lastActivity": "2025-12-14",
+      "modelsUsed": [
+        "claude-haiku-4-5-20251001",
+        "claude-opus-4-5-20251101"
+      ],
+      "modelBreakdowns": [
+        {
+          "modelName": "claude-opus-4-5-20251101",
+          "inputTokens": 11274,
+          "outputTokens": 108,
+          "cacheCreationTokens": 157759,
+          "cacheReadTokens": 1321768,
+          "cost": 1.7059477499999998
+        },
+        {
+          "modelName": "claude-haiku-4-5-20251001",
+          "inputTokens": 15698,
+          "outputTokens": 85,
+          "cacheCreationTokens": 0,
+          "cacheReadTokens": 0,
+          "cost": 0.016123
+        }
+      ],
+      "projectPath": "Unknown Project"
+    },
+    {
+      "sessionId": "-root-projects-aisoft-invoice-processing-machine",
+      "inputTokens": 97331,
+      "outputTokens": 16392,
+      "cacheCreationTokens": 4842668,
+      "cacheReadTokens": 103541626,
+      "totalTokens": 108498017,
+      "totalCost": 79.047523,
+      "lastActivity": "2025-12-14",
+      "modelsUsed": [
+        "claude-haiku-4-5-20251001",
+        "claude-opus-4-5-20251101"
+      ],
+      "modelBreakdowns": [
+        {
+          "modelName": "claude-opus-4-5-20251101",
+          "inputTokens": 35411,
+          "outputTokens": 4777,
+          "cacheCreationTokens": 4410708,
+          "cacheReadTokens": 100425026,
+          "cost": 78.07591800000007
+        },
+        {
+          "modelName": "claude-haiku-4-5-20251001",
+          "inputTokens": 61920,
+          "outputTokens": 11615,
+          "cacheCreationTokens": 431960,
+          "cacheReadTokens": 3116600,
+          "cost": 0.9716049999999998
+        }
+      ],
+      "projectPath": "Unknown Project"
+    },
+    {
+      "sessionId": "-root-projects",
+      "inputTokens": 1921,
+      "outputTokens": 11,
+      "cacheCreationTokens": 5666,
+      "cacheReadTokens": 12859,
+      "totalTokens": 20457,
+      "totalCost": 0.048034,
+      "lastActivity": "2025-12-14",
+      "modelsUsed": [
+        "claude-haiku-4-5-20251001",
+        "claude-opus-4-5-20251101"
+      ],
+      "modelBreakdowns": [
+        {
+          "modelName": "claude-opus-4-5-20251101",
+          "inputTokens": 1029,
+          "outputTokens": 5,
+          "cacheCreationTokens": 5666,
+          "cacheReadTokens": 12859,
+          "cost": 0.047112
+        },
+        {
+          "modelName": "claude-haiku-4-5-20251001",
+          "inputTokens": 892,
+          "outputTokens": 6,
+          "cacheCreationTokens": 0,
+          "cacheReadTokens": 0,
+          "cost": 0.000922
+        }
+      ],
+      "projectPath": "Unknown Project"
+    },
+    {
+      "sessionId": "-root-projects-aizu-cc-usage-dashboard",
+      "inputTokens": 4217,
+      "outputTokens": 41,
+      "cacheCreationTokens": 24026,
+      "cacheReadTokens": 326422,
+      "totalTokens": 354706,
+      "totalCost": 0.3275915,
+      "lastActivity": "2025-12-14",
+      "modelsUsed": [
+        "claude-haiku-4-5-20251001",
+        "claude-opus-4-5-20251101"
+      ],
+      "modelBreakdowns": [
+        {
+          "modelName": "claude-opus-4-5-20251101",
+          "inputTokens": 2284,
+          "outputTokens": 33,
+          "cacheCreationTokens": 24026,
+          "cacheReadTokens": 326422,
+          "cost": 0.3256185
+        },
+        {
+          "modelName": "claude-haiku-4-5-20251001",
+          "inputTokens": 1933,
+          "outputTokens": 8,
+          "cacheCreationTokens": 0,
+          "cacheReadTokens": 0,
+          "cost": 0.001973
+        }
+      ],
+      "projectPath": "Unknown Project"
+    },
+    {
+      "sessionId": "-root-projects-ap-petronas-dc-2026",
+      "inputTokens": 166995,
+      "outputTokens": 74014,
+      "cacheCreationTokens": 3233476,
+      "cacheReadTokens": 38866784,
+      "totalTokens": 42341269,
+      "totalCost": 36.164704,
+      "lastActivity": "2025-12-13",
+      "modelsUsed": [
+        "claude-haiku-4-5-20251001",
+        "claude-opus-4-5-20251101",
+        "claude-sonnet-4-5-20250929"
+      ],
+      "modelBreakdowns": [
+        {
+          "modelName": "claude-opus-4-5-20251101",
+          "inputTokens": 67296,
+          "outputTokens": 1519,
+          "cacheCreationTokens": 2400450,
+          "cacheReadTokens": 31017128,
+          "cost": 30.88583149999999
+        },
+        {
+          "modelName": "claude-sonnet-4-5-20250929",
+          "inputTokens": 229,
+          "outputTokens": 71441,
+          "cacheCreationTokens": 401872,
+          "cacheReadTokens": 6354512,
+          "cost": 4.485675600000001
+        },
+        {
+          "modelName": "claude-haiku-4-5-20251001",
+          "inputTokens": 99470,
+          "outputTokens": 1054,
+          "cacheCreationTokens": 431154,
+          "cacheReadTokens": 1495144,
+          "cost": 0.7931968999999995
+        }
+      ],
+      "projectPath": "Unknown Project"
+    },
+    {
+      "sessionId": "-root-Projects-friday",
+      "inputTokens": 1890,
+      "outputTokens": 52,
+      "cacheCreationTokens": 20504,
+      "cacheReadTokens": 454366,
+      "totalTokens": 476812,
+      "totalCost": 0.36280300000000004,
+      "lastActivity": "2025-12-12",
+      "modelsUsed": [
+        "claude-haiku-4-5-20251001",
+        "claude-opus-4-5-20251101"
+      ],
+      "modelBreakdowns": [
+        {
+          "modelName": "claude-opus-4-5-20251101",
+          "inputTokens": 1080,
+          "outputTokens": 50,
+          "cacheCreationTokens": 20504,
+          "cacheReadTokens": 454366,
+          "cost": 0.36198300000000005
+        },
+        {
+          "modelName": "claude-haiku-4-5-20251001",
+          "inputTokens": 810,
+          "outputTokens": 2,
+          "cacheCreationTokens": 0,
+          "cacheReadTokens": 0,
+          "cost": 0.00082
+        }
+      ],
+      "projectPath": "Unknown Project"
+    }
+  ],
+  "totals": {
+    "inputTokens": 299326,
+    "outputTokens": 90703,
+    "cacheCreationTokens": 8284099,
+    "cacheReadTokens": 144523825,
+    "totalCost": 117.67272625,
+    "totalTokens": 153197953
+  }
+}
